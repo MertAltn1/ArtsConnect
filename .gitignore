@@ -1,0 +1,17 @@
+# Python / Django
+backend/venv/
+__pycache__/
+*.pyc
+db.sqlite3
+.env
+
+# kullanici yuklemeleri
+backend/media/
+
+# Node / React
+node_modules/
+frontend/dist/
+
+# editor / isletim sistemi
+.vscode/
+.DS_Store

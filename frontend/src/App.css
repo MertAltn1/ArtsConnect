@@ -1,0 +1,442 @@
+* {
+  box-sizing: border-box;
+}
+:root {
+  --page-bg: #F2F6FA
+}
+.mainPage {
+  display: flex;
+  height: 100vh;   
+}
+.authPage {
+  min-height: 100vh; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px; 
+  background: var(--page-bg);
+}
+.authBox{
+  background-color: white;
+  padding: 50px 40px;
+  width: 100%;
+  max-width: 450px;
+  border: 1px solid grey;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+.authLogo{
+  width: 70px;
+}
+.authBox input{
+  width: 80%;
+  padding: 15px;
+  background: white;
+  border: 1px solid grey;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+}
+.authItem{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.authText{
+  font-size: 14px;
+  color: #555;
+}
+.authLink{
+  color: #164BA1;
+  font-weight: bold;
+  margin-left: 4px;
+}
+.authTitle {
+  font-size: 28px;
+  color: #333;
+  font-weight: bold;
+  text-align: center;
+}
+.authButton{
+  width: 80%;
+  padding: 15px;
+  border: 1px solid grey;
+  background: #164BA1;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+.navBar{
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  flex-shrink: 0;  
+  background-color: #233D54;
+  color: white;
+  overflow: auto;
+}
+.navBar p{
+  margin: 0;
+}
+.navBottom{
+  margin-top: auto; 
+  padding: 25.5px;
+  border-top: 1px solid #3a5670;
+}
+.logoutButton{
+  background: none;
+  border: none;
+  color: #f37123;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+}
+.navLogo{
+  height: 36px;
+  align-self: flex-start; 
+}
+#appName{
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.profilPhoto {
+  border: 3px solid #4CD964;   
+  display: flex;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  align-items: center;
+  background-color: #2E4A63;
+  object-fit: cover; 
+}
+.profilPart{
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.searchChat{
+  outline: none;
+  background-color: #f37123;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid grey;
+  width: 100%;
+  color: white;
+  font-size: 14px;
+}
+.searchChat::placeholder{
+  color: whitesmoke
+}
+.chatList{
+  flex: 1;           
+  overflow-y: auto;   
+  padding: 0 10px;
+  overflow: hidden;
+}
+.chatItem{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+}
+.chatItem:hover{
+  background-color: #2E4A63;
+}
+.chatPhoto{
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #2E4A63;
+  object-fit: cover;  /* kare olmayan foto ezilmesin, kirpilsin */
+  flex-shrink: 0;     /* uzun isimde ezilmesin */
+}
+.chatItem small{
+  color: #9BB0C4;
+}
+.chatArea{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--page-bg);
+  overflow: hidden;
+}
+.chatHeader{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid #e5e5e5;
+  flex-shrink: 0;
+  background-color:white;
+}
+.messageInput{
+  flex-shrink: 0;     /* mesajlar artinca ezilmesin */
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  gap: 10px;
+  background: white;
+  border: 1px solid #d5dbe0;
+}
+.messageInput input{
+  flex: 1;
+  outline: none;
+  border: none;
+  padding: 14px;
+  background: transparent;
+}
+.messageInput button{
+  display: flex;      
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  background-color: white;
+}
+.messageInput .sendMessage{
+  border-radius: 50%;
+  border: none;
+  color: #233D54;
+  cursor: pointer;
+  transform: rotate(0deg);
+}
+.chatHeaderLeft{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.chatHeaderLeft .chatPhoto{
+  width: 38px;
+  height: 38px;
+  border: 1px solid black;
+}
+.chatHeaderLeft span{
+  font-size: 17px;
+  font-weight: 600;
+}
+.chatHeaderRight{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.messageList{
+  flex: 1;
+  overflow: hidden;
+  overflow-y: auto;   
+  min-height: 0;      
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.messageMine, .messageOther{
+  max-width: 60%;
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+.messageMine{
+  align-self: flex-end;   
+  background-color: #233D54;
+  color: white;
+}
+.messageOther{
+  align-self: flex-start; 
+  background-color: white;
+  color: #233D54;
+}
+.messageMine small, .messageOther small{
+  display: block;
+  text-align: right;
+  font-size: 11px;
+  opacity: 0.7;
+}
+.chatEmpty{
+  align-items: center;    
+  justify-content: center;
+  gap: 16px;
+}
+.chatEmptyLogo{
+  width: 90px;
+  opacity: 0.5;
+}
+.chatEmptyName{
+  font-size: 26px;
+  font-weight: bold;
+  color: #233D54;
+  opacity: 0.5;
+}
+
+.alertMessage {
+  width: 80%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.alertMessage.error {
+  background-color: #fde8e8;
+  color: #b42318;
+  border: 1px solid #f3b4b4;
+}
+
+.alertMessage.success {
+  background-color: #e8f4ec;
+  color: #26713b;
+  border: 1px solid #b3d7bd;
+}
+
+.authBox input.inputError {
+  border: 2px solid #e5484d;
+}
+
+.authBox input.inputError:hover,
+.authBox input.inputError:focus {
+  border-color: #e5484d;
+}
+.profilPhotoBox{
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+.photoButton{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #233D54;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+.bottomDiv{
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.iconButton{
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;   
+}
+
+.navBar span{
+  font-size: 20px;
+}
+.roleText{
+  font-size: 13px;
+  color: #f37123;
+}
+.sectionTitle{
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #9BB0C4;
+}
+
+.addUserOverlay{
+  position: fixed;
+  top:0;
+  right:0;
+  bottom: 0;
+  left: 0;                    
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;                  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.addUserBox{
+  background: white;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  color: #233D54;                 
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+.addUserHeader{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.addUserHeader h2{
+  margin: 0;
+  color: #233D54;
+}
+.addUserSearch{
+  flex: 1;
+  outline: none;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: none;
+  background-color: #f37123;
+  color: white;
+}
+.addUserSearch::placeholder{
+  color: rgba(255, 255, 255, 0.75);
+}
+.addUserList{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.addUserItem{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.addUserItem small{
+  color: #f37123;
+}
+.addButton{
+  margin-left: auto;    /* sagda dursun */
+  padding: 6px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #f37123;
+  color: white;
+  cursor: pointer;
+}
+.posFix{
+  position: relative;
+}
+.chatSettings{
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  background-color:white;
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  white-space: nowrap; /*text alta gitmio */
+}
+.chatSettings .Item{
+  display: flex;
+  align-items: center;
+  padding: 6px 25px;
+  gap: 15px;
+  cursor: pointer;
+}
+.chatSettings .Item:hover{
+  background-color: #f2f2f2;
+}

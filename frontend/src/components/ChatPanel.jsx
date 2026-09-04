@@ -1,15 +1,21 @@
 import '../App.css'
 import ChatSettings from './ChatSettings'
+import ChatWallpaper from './ChatWallpaper'
+import UserProfile from './UserProfile'
+import EmojiPanel from './EmojiPanel'
 import logo from '../assets/logo.png'
 import { useEffect, useState } from 'react'
 import { apiFetch } from '../api'
 import { MoreVert, Search, AttachFile, InsertEmoticon, Send, HorizontalRule } from '@mui/icons-material';
 
-const ChatPanel = ( {selected, user} ) => {
+const ChatPanel = ( {selected, user, deleteChat} ) => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [showSettings, setShowSettings] = useState(false)
     const [wallpaper, setWallpaper] = useState("#F2F6FA")
+    const [showWallpaper, setShowWallpaper] = useState(false)
+    const [showProfile, setShowProfile] = useState(false)
+    const [showEmoji, setShowEmoji] = useState(false)
 
     async function sendMessage() {
         if(!newMessage.trim()) return; /* empty mesaj */
@@ -23,6 +29,10 @@ const ChatPanel = ( {selected, user} ) => {
             setMessages([...messages, data]) /* ... eksi mesjaları koru sona ele */
             setNewMessage("")
         }
+    }
+
+    function addEmoji(emoji) {
+        setNewMessage(newMessage + emoji);
     }
 
     useEffect(()=>{
@@ -50,7 +60,7 @@ const ChatPanel = ( {selected, user} ) => {
     return (
         <div className="chatArea">
             <div className="chatHeader">
-                <div className="chatHeaderLeft">
+                <div className="chatHeaderLeft" onClick={()=>setShowProfile(true)}>
                     {selected.user.profile_photo ? (
                         <img
                             className="chatPhoto"
@@ -69,11 +79,25 @@ const ChatPanel = ( {selected, user} ) => {
                         <button className='iconButton' 
                             onClick={()=>setShowSettings(!showSettings)}><MoreVert/>
                         </button>
-                        {showSettings && <ChatSettings setWallpaper={setWallpaper}/>}
+                        {showSettings && (
+                            <ChatSettings
+                                setShowWallpaper={setShowWallpaper}
+                                setShowSettings={setShowSettings}
+                                deleteChat={()=>deleteChat(selected.id)}
+                            />
+                        )}
                     </div>
                     
                 </div>
             </div>
+
+            {showProfile && (
+                <UserProfile userId={selected.user.id} setShowProfile={setShowProfile} />
+            )}
+
+            {showWallpaper && (
+                <ChatWallpaper setWallpaper={setWallpaper} setShowWallpaper={setShowWallpaper} />
+            )}
 
             <div className="messageList" style={{ background: wallpaper}}>
                 {messages.map((message) => (
@@ -94,7 +118,12 @@ const ChatPanel = ( {selected, user} ) => {
                     placeholder="Type a message..."
                     onChange={(x) => setNewMessage(x.target.value)}
                 />
-                <button><InsertEmoticon/></button>
+                <div className='posFix'>
+                    <button onClick={()=>setShowEmoji(!showEmoji)}><InsertEmoticon/></button>
+                    {showEmoji && (
+                        <EmojiPanel onEmojiSelect={(emoji)=>setNewMessage(newMessage + emoji)} />
+                    )}
+                </div>
 
                 <button onClick={sendMessage} className='sendMessage'><Send/></button>
             </div>

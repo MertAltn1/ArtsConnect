@@ -9,13 +9,6 @@ export function apiFetch(path, method = "GET", body = null) {
         headers.Authorization = `Token ${token}`;
     }
 
-    if (method === "GET") {
-        return fetch(`${API_URL}${path}`, {
-            method,
-            headers
-        });
-    }
-
     if (method === "POST") {
         headers["Content-Type"] = "application/json";
 
@@ -25,4 +18,9 @@ export function apiFetch(path, method = "GET", body = null) {
             body: JSON.stringify(body)
         });
     }
+
+    return fetch(`${API_URL}${path}`, {
+        method,
+        headers
+    });
 }

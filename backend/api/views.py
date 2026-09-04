@@ -70,6 +70,19 @@ class MeView(APIView):
 
         return Response(serializer.data)
 
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
+        User = get_user_model()
+
+        user = User.objects.filter(id=user_id).first()
+        if user is None:
+            return Response({"error": "user not found"}, status=404)
+        serializer = MeSerializer(user)
+
+        return Response(serializer.data)
+
 
 class ChatListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -140,6 +153,15 @@ class MessageListView(APIView):
 
         return Response(serializer.data)
 
+    def delete(self, request, chat_id):
+        chat = Chat.objects.filter(id=chat_id, users=request.user).first()
+
+        if chat is None:
+            return Response({"error": "Chat not found."}, status=404)
+
+        chat.delete()  # mesajlar da gider, cascade
+
+        return Response({"message": "Chat deleted."})
 
 class ProfilePhotoView(APIView):
     permission_classes = [IsAuthenticated]

@@ -1,16 +1,18 @@
 import '../App.css'
 import AddUser from './AddUser'
+import UserProfile from './UserProfile'
 import logo from '../assets/logo.png'
 import { useNavigate } from 'react-router'
 import { useState } from 'react'
 import { apiFetch } from '../api'
-import { PhotoCameraOutlined, PersonAddAlt1 } from '@mui/icons-material';
+import { PhotoCameraOutlined, PersonAddAlt1, PersonOutlined, LogoutOutlined } from '@mui/icons-material';
 
 const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
     const navigate = useNavigate();
     const [photo, setPhoto] = useState(null)
     const [search, setSearch] = useState("");
     const [showAddUser, setShowAddUser] = useState(false);
+    const [showProfile, setShowProfile] = useState(false);
 
     const shownPhoto = photo || user?.profile_photo /*yeni foto var mı */
 
@@ -127,12 +129,14 @@ const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
             </div>
 
             <div className='navBottom'>
-                <button className='logoutButton' onClick={logout}>Logout</button>
+                <button className='iconButton' onClick={()=>setShowProfile(true)}><PersonOutlined/>Profile</button>
+                <button className='logoutButton' onClick={logout}><LogoutOutlined/>Logout</button>
             </div>
 
             {showAddUser && (
                 <AddUser setShowAddUser={setShowAddUser} chats={chats} setChats={setChats} />
             )}
+            {showProfile && <UserProfile userId={user.id} setShowProfile={setShowProfile} />}
         </div>
     )
 }

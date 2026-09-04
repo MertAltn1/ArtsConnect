@@ -10,13 +10,25 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = ["id","sender","content","created_at"]
 
 class UserSerializer(serializers.ModelSerializer):
+    department = serializers.CharField(source="department.name", read_only=True, default=None)
+
     class Meta:
         model = User
-        fields = ["id", "username", "role", "profile_photo"]
+        fields = ["id", "username", "role", "department", "profile_photo"]
 
-class MeSerializer(UserSerializer): #kendi bilgim, ustune email ve online
+class MeSerializer(UserSerializer): #email, online, team
+    team = serializers.SerializerMethodField() #ayni departmandakiler
+
     class Meta(UserSerializer.Meta):
-        fields = UserSerializer.Meta.fields + ["email", "online"]
+        fields = UserSerializer.Meta.fields + ["email", "online", "team"]
+
+    def get_team(self, user):
+        if user.department is None:
+            return []
+
+        team = User.objects.filter(department=user.department).exclude(id=user.id)
+
+        return UserSerializer(team, many=True).data
 
 class ChatSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField() #karsi taraf hesaplaniyor

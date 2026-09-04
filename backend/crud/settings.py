@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",  # runserver'i ASGI'ye cevirsin diye en ustte
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -72,6 +73,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "crud.wsgi.application"
+ASGI_APPLICATION = "crud.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # tek sunucu, redis gerekmiyor
+    },
+}
 
 
 # Database

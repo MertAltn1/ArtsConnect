@@ -9,6 +9,7 @@ from .views import (
     ProfilePhotoView,
     RegisterView,
     SearchUserView,
+    UserDetailView
 )
 
 urlpatterns = [
@@ -20,4 +21,5 @@ urlpatterns = [
     path("api/chats/<int:chat_id>/messages/", MessageListView.as_view()),
     path("api/profile-photo/", ProfilePhotoView.as_view()),
     path("api/users/search/", SearchUserView.as_view()),
+    path("api/users/<int:user_id>/", UserDetailView.as_view())
 ]

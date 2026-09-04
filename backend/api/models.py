@@ -1,6 +1,11 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+class Department(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+            return f"{self.name}"  #same2
 
 # Create your models here.
 class User(AbstractUser):
@@ -13,6 +18,9 @@ class User(AbstractUser):
         upload_to="profile_photos/", null=True, blank=True
     )
     role = models.CharField(max_length=50, blank=True)
+    department = models.ForeignKey(
+        Department, on_delete=models.SET_NULL, null=True,blank=True,related_name="members" #depi silme cascade
+    )
 
 
 class Chat(models.Model):
@@ -30,3 +38,5 @@ class Message(models.Model):
     )
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+

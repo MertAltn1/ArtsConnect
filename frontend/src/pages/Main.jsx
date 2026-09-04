@@ -16,6 +16,16 @@ const Main = ( {setToken,user} ) => {
 
         getChats()
     }, [])
+
+    async function deleteChat(chatId) {
+        const response = await apiFetch(`/api/chats/${chatId}/messages/`, "DELETE")
+
+        if(response.ok){
+            setChats(chats.filter((chat) => chat.id !== chatId))  /* silineni cikar */
+            setSelected(null)   /* panel bosalsin */
+        }
+    }
+
     return (
         <div className='mainPage'>
             <Navbar 
@@ -25,7 +35,7 @@ const Main = ( {setToken,user} ) => {
                 setChats={setChats}
                 setSelected={setSelected}
             />
-            <ChatPanel selected={selected} user={user}/>
+            <ChatPanel selected={selected} user={user} deleteChat={deleteChat}/>
         </div>
     )
 }

@@ -82,8 +82,18 @@
 }
 .navBottom{
   margin-top: auto; 
-  padding: 25.5px;
+  padding: 20px 25px;
   border-top: 1px solid #3a5670;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;  /* butonlar gerilmesin, solda dursun */
+  gap: 14px;
+}
+.navBottom button{
+  display: flex;        /* ikon ve yazi ayni hizada dursun */
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
 }
 .logoutButton{
   background: none;
@@ -133,10 +143,10 @@
   color: whitesmoke
 }
 .chatList{
-  flex: 1;           
-  overflow-y: auto;   
+  flex: 1;             
   padding: 0 10px;
-  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 .chatItem{
   display: flex;
@@ -214,6 +224,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  cursor: pointer;   /* tiklanabilir oldugu belli olsun */
 }
 .chatHeaderLeft .chatPhoto{
   width: 38px;
@@ -440,3 +451,118 @@
 .chatSettings .Item:hover{
   background-color: #f2f2f2;
 }
+.profileOverlay{
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profileBox{
+  background: white;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  color: #233D54;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.profileHeader{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.profileHeader h2{
+  margin: 0;
+}
+.profileName{
+  font-size: 20px;
+  font-weight: bold;
+}
+.profileBox .profilPhoto{
+  border: none;   /* yesil halka sadece kendi profilimde anlamli */
+}
+.profileTop{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.profileTopText{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.profileDetails{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid #e5e5e5;
+  padding-top: 14px;
+  font-size: 12px;       /* Role Department Contact Team hepsi buradan */
+  color: #f37123;
+}
+.profileLabel{
+  font-weight: bold;
+  color: #233D54;        /* boyutu profileDetails'ten aliyor */
+}
+.teamList{
+  display: flex;
+  gap: 14px;
+  overflow-y: auto;
+}
+.teamItem{
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+  font-size: 10px;
+  color: #233D54;
+}
+.teamPhoto{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #2E4A63;
+  object-fit: cover;
+}
+.profileBox p{
+  margin: 0;
+}
+.colorList{
+  width: 100%;
+  display: flex;
+  gap: 12px;
+}
+.colorItem{
+  width: 60px;
+  height: 60px;
+  border: 1px solid #e5e5e5;
+  cursor: pointer;
+}
+.emojiPanel{
+  background-color: white;
+  flex-wrap: wrap;
+  border: 1px solid #d5dbe0;
+  position: absolute;
+  bottom: 100%;  
+  left: -2px;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+}
+.emojiPanel button{
+  font-size: 20px;
+}
+

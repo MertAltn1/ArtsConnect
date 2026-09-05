@@ -5,7 +5,7 @@ import UserProfile from './UserProfile'
 import EmojiPanel from './EmojiPanel'
 import logo from '../assets/logo.png'
 import { useEffect, useState } from 'react'
-import { apiFetch } from '../api'
+import { apiFetch, WS_URL } from '../api'
 import { MoreVert, Search, AttachFile, InsertEmoticon, Send, HorizontalRule } from '@mui/icons-material';
 
 const ChatPanel = ( {selected, user, deleteChat} ) => {
@@ -16,19 +16,14 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
     const [showWallpaper, setShowWallpaper] = useState(false)
     const [showProfile, setShowProfile] = useState(false)
     const [showEmoji, setShowEmoji] = useState(false)
+    const [socket, setSocket] = useState(null)
 
-    async function sendMessage() {
+    function sendMessage() {
         if(!newMessage.trim()) return; /* empty mesaj */
 
-        const response = await apiFetch(`/api/chats/${selected.id}/messages/`, "POST", {
-            content: newMessage
-        })
+        socket.send(JSON.stringify({ content: newMessage }))
 
-        const data = await response.json();
-        if(response.ok){
-            setMessages([...messages, data]) /* ... eksi mesjaları koru sona ele */
-            setNewMessage("")
-        }
+        setNewMessage("")   /* ekrana basmayi websocket yapiyor */
     }
 
     function addEmoji(emoji) {
@@ -46,6 +41,22 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
         }
 
         getMessages()
+    }, [selected])
+
+    useEffect(()=>{
+        if(!selected) return
+
+        const token = localStorage.getItem("token")
+        const ws = new WebSocket(`${WS_URL}/ws/chat/${selected.id}/${token}/`)
+
+        ws.onmessage = (x) => {
+            const message = JSON.parse(x.data)
+            setMessages((eski) => [...eski, message])  /* eski liste React'ten gelsin */
+        }
+
+        setSocket(ws)
+
+        return () => ws.close()   /* sohbet degisince baglantiyi kapat */
     }, [selected])
 
     if(!selected){

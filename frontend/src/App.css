@@ -18,13 +18,13 @@
 }
 .authBox{
   background-color: white;
-  padding: 50px 40px;
+  padding: 35px 40px;
   width: 100%;
   max-width: 450px;
   border: 1px solid grey;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;      /* registerda 9 kutu var, 30px olunca tasiyordu */
 }
 .authLogo{
   width: 70px;
@@ -112,7 +112,7 @@
   font-weight: 700;
   letter-spacing: -0.5px;
 }
-.profilPhoto {
+.profilePhoto {
   border: 3px solid #4CD964;   
   display: flex;
   width: 100px;
@@ -122,7 +122,7 @@
   background-color: #2E4A63;
   object-fit: cover; 
 }
-.profilPart{
+.profilePart{
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -167,6 +167,12 @@
   background-color: #2E4A63;
   object-fit: cover;  /* kare olmayan foto ezilmesin, kirpilsin */
   flex-shrink: 0;     /* uzun isimde ezilmesin */
+}
+.onlineRing{
+  border: 3px solid #4CD964;   /* profilePhoto'daki halkanin ayni */
+}
+.offlineRing{
+  border: 3px solid #e5484d;
 }
 .chatItem small{
   color: #9BB0C4;
@@ -235,10 +241,47 @@
   font-size: 17px;
   font-weight: 600;
 }
+.searchMessage{
+  outline: none;
+  border: 1px solid #d5dbe0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+}
 .chatHeaderRight{
   display: flex;
   align-items: center;
   gap: 16px;
+}
+.topicList{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  flex-shrink: 0;        /* mesajlar artinca ezilmesin */
+  background-color: white;
+  border-bottom: 1px solid #e5e5e5;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.topicItem{
+  border: none;
+  padding: 6px 14px;
+  border-radius: 12px;
+  background-color: #f2f2f2;
+  color: #233D54;
+  cursor: pointer;
+  white-space: nowrap;   /* konu adi alta kaymasin */
+}
+.topicActive{
+  background-color: #f37123;
+  color: white;
+}
+.topicInput{
+  border: none;
+  outline: none;
+  width: 80px;
+  font-size: 13px;
 }
 .messageList{
   flex: 1;
@@ -247,7 +290,7 @@
   min-height: 0;      
   padding: 20px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;  /* en alttan basla, son mesaj gorunsun */
   gap: 10px;
 }
 .messageMine, .messageOther{
@@ -315,7 +358,7 @@
 .authBox input.inputError:focus {
   border-color: #e5484d;
 }
-.profilPhotoBox{
+.profilePhotoBox{
   position: relative;
   width: 100px;
   height: 100px;
@@ -349,8 +392,8 @@
   color: inherit;   
 }
 
-.navBar span{
-  font-size: 20px;
+.profilePart span{
+  font-size: 20px;   /* sadece fotonun altindaki isim, navBar span degil */
 }
 .roleText{
   font-size: 13px;
@@ -486,9 +529,6 @@
 .profileName{
   font-size: 20px;
   font-weight: bold;
-}
-.profileBox .profilPhoto{
-  border: none;   /* yesil halka sadece kendi profilimde anlamli */
 }
 .profileTop{
   width: 100%;

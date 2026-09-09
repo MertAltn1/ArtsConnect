@@ -1,8 +1,8 @@
-import '../App.css'
+import '/src/App.css'
 import CloseIcon from '@mui/icons-material/Close';
 
 const ChatWallpaper = ({ setWallpaper, setShowWallpaper }) => {
-    const colors = ["#080808", "#e8f4ec", "#fde8e8", "#233D54"]
+    const colors = ["#F2F6FA", "#080808", "#e8f4ec", "#fde8e8", "#233D54"]  /* ilki varsayilan */
 
     return (
         <div className='profileOverlay'>
@@ -24,6 +24,7 @@ const ChatWallpaper = ({ setWallpaper, setShowWallpaper }) => {
                             key={color}
                             style={{ background: color }}
                             onClick={() => {
+                                localStorage.setItem("wallpaper", color)  /* yenilenince kaybolmasin */
                                 setWallpaper(color)
                                 setShowWallpaper(false)
                             }}

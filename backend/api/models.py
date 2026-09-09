@@ -19,12 +19,19 @@ class User(AbstractUser):
     )
     role = models.CharField(max_length=50, blank=True)
     department = models.ForeignKey(
-        Department, on_delete=models.SET_NULL, null=True,blank=True,related_name="members" #depi silme cascade
+        Department,
+        on_delete=models.SET_NULL,  # depi silme cascade
+        null=True,
+        blank=True,
+        related_name="members",
     )
 
 
 class Chat(models.Model):
     users = models.ManyToManyField(User, related_name="chats")
+    deleted_by = models.ManyToManyField(  # kim sildi
+        User, related_name="deleted_chats", blank=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -32,10 +39,13 @@ class Chat(models.Model):
 
 
 class Message(models.Model):
-    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages")
+    chat = models.ForeignKey(
+        Chat, on_delete=models.CASCADE, related_name="messages"
+    )
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="sent_messages"
     )
+    topic = models.CharField(max_length=50, blank=True)  # bos ise Genel
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

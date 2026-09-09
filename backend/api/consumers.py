@@ -13,6 +13,7 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.chat_id = self.scope["url_route"]["kwargs"]["chat_id"]
         self.group_name = f"chat_{self.chat_id}"  # odanin adi
+        self.user = None  # asagida kapanirsa disconnect bunu ariyor
 
         key = self.scope["url_route"]["kwargs"]["token"]
         token = Token.objects.filter(key=key).first()
@@ -23,18 +24,33 @@ class ChatConsumer(WebsocketConsumer):
 
         self.user = token.user
 
-        self.chat = Chat.objects.filter(id=self.chat_id, users=self.user).first()
+        self.chat = Chat.objects.filter(
+            id=self.chat_id, users=self.user
+        ).first()
 
         if self.chat is None:  # bu sohbetin uyesi degil
             self.close()
             return
 
-        async_to_sync(self.channel_layer.group_add)(self.group_name, self.channel_name)
+        async_to_sync(self.channel_layer.group_add)(
+            self.group_name, self.channel_name
+        )
+
+        self.user.online = True
+        self.user.save()
 
         self.accept()
 
     def disconnect(self, close_code):
-        async_to_sync(self.channel_layer.group_discard)(self.group_name, self.channel_name)
+        async_to_sync(self.channel_layer.group_discard)(
+            self.group_name, self.channel_name
+        )
+
+        if self.user is None:  # token gecersizdi, hic baglanmadi
+            return
+
+        self.user.online = False
+        self.user.save()
 
     def receive(self, text_data):  # tarayicidan mesaj geldi
         serializer = MessageSerializer(data=json.loads(text_data))
@@ -44,9 +60,14 @@ class ChatConsumer(WebsocketConsumer):
 
         message = serializer.save(chat=self.chat, sender=self.user)
 
+        self.chat.deleted_by.clear()  # silen varsa sohbet geri gelsin
+
         async_to_sync(self.channel_layer.group_send)(
             self.group_name,
-            {"type": "chat_message", "message": MessageSerializer(message).data},
+            {
+                "type": "chat_message",
+                "message": MessageSerializer(message).data,
+            },
         )
 
     def chat_message(self, event):  # odadan mesaj geldi

@@ -1,8 +1,9 @@
-import '../App.css'
 import { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
-import useDebounce from '../hooks/useDebounce'
-import { apiFetch } from '../api'
+
+import '/src/App.css'
+import useDebounce from '/src/hooks/useDebounce'
+import { apiFetch, API_URL } from '/src/api'
 
 const AddUser = ({ setShowAddUser, chats, setChats }) => {
     const [username, setUsername] = useState("");
@@ -31,9 +32,9 @@ const AddUser = ({ setShowAddUser, chats, setChats }) => {
         const data = await response.json()
 
         if(response.ok){
-            const zatenVar = chats.some((chat) => chat.id === data.id)
-            if(!zatenVar){
-                setChats([...chats, data])
+            const alreadyExists = chats.some((chat) => chat.id === data.id)
+            if(!alreadyExists){
+                setChats([data, ...chats])   /* yeni sohbet uste */
             }
             setShowAddUser(false)
         }
@@ -65,7 +66,15 @@ const AddUser = ({ setShowAddUser, chats, setChats }) => {
                 <div className='addUserList'>
                     {users.map((found) => (
                         <div className='addUserItem' key={found.id}>
-                            <div className='chatPhoto'></div>
+                            {found.profile_photo ? (
+                                <img
+                                    className="chatPhoto"
+                                    src={`${API_URL}${found.profile_photo}`}
+                                    alt={found.username}
+                                />
+                            ) : (
+                                <div className="chatPhoto"></div>
+                            )}
                             <div>
                                 <div>{found.username}</div>
                                 <small>{found.role}</small>

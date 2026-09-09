@@ -1,16 +1,18 @@
-import '../App.css'
-import AddUser from './AddUser'
-import UserProfile from './UserProfile'
-import logo from '../assets/logo.png'
+import '/src/App.css'
+import AddUser from '/src/components/AddUser'
+import UserProfile from '/src/components/UserProfile'
+import logo from '/src/assets/logo.png'
 import { useNavigate } from 'react-router'
 import { useState } from 'react'
-import { apiFetch } from '../api'
+import { apiFetch, API_URL } from '/src/api'
+import useDebounce from '/src/hooks/useDebounce'
 import { PhotoCameraOutlined, PersonAddAlt1, PersonOutlined, LogoutOutlined } from '@mui/icons-material';
 
 const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
     const navigate = useNavigate();
     const [photo, setPhoto] = useState(null)
     const [search, setSearch] = useState("");
+    const searchText = useDebounce(search, 300)  /* her harfte listeyi cizmesin */
     const [showAddUser, setShowAddUser] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
 
@@ -22,10 +24,10 @@ const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
 
         const token = localStorage.getItem("token")
 
-        const formData = new FormData()
+        const formData = new FormData() /*json değil dosya */
         formData.append("profile_photo", file)
 
-        const response = await fetch("http://127.0.0.1:8000/api/profile-photo/", {
+        const response = await fetch(`${API_URL}/api/profile-photo/`, {
             method: "POST",
             headers: {
                 Authorization: `Token ${token}`
@@ -54,16 +56,16 @@ const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
                     <img className='navLogo' src={logo} alt="ArtsConnect" />
                     <span id='appName'>ArtsConnect</span>
                 </div>
-                <div className='profilPart'>
-                    <div className='profilPhotoBox'>
+                <div className='profilePart'>
+                    <div className='profilePhotoBox'>
                         {shownPhoto ? (
                             <img
-                                className="profilPhoto"
-                                src={`http://127.0.0.1:8000${shownPhoto}`}
+                                className="profilePhoto"
+                                src={`${API_URL}${shownPhoto}`}
                                 alt="Profile"
                             />
                             ) : (
-                            <div className="profilPhoto"></div>
+                            <div className="profilePhoto"></div>
                             )}
                         <label className='photoButton' htmlFor='photoInput'>
                             <PhotoCameraOutlined />
@@ -103,7 +105,7 @@ const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
             <div className="chatList">
                 {chats
                 .filter((chat)=>
-                    chat.user.username.toLowerCase().includes(search.toLowerCase())
+                    chat.user.username.toLowerCase().includes(searchText.toLowerCase())
                 )
                 .map((chat) => (
                     <div
@@ -113,12 +115,12 @@ const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
                     >
                         {chat.user.profile_photo ? (
                             <img
-                                className="chatPhoto"
-                                src={`http://127.0.0.1:8000${chat.user.profile_photo}`}
+                                className={chat.user.online ? "chatPhoto onlineRing" : "chatPhoto offlineRing"}
+                                src={`${API_URL}${chat.user.profile_photo}`}
                                 alt={chat.user.username}
                             />
                         ) : (
-                            <div className="chatPhoto"></div>
+                            <div className={chat.user.online ? "chatPhoto onlineRing" : "chatPhoto offlineRing"}></div>
                         )}
                         <div>
                             <div><p>{chat.user.username}</p></div>
@@ -136,7 +138,9 @@ const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
             {showAddUser && (
                 <AddUser setShowAddUser={setShowAddUser} chats={chats} setChats={setChats} />
             )}
-            {showProfile && <UserProfile userId={user.id} setShowProfile={setShowProfile} />}
+            {showProfile && 
+                <UserProfile userId={user.id} setShowProfile={setShowProfile} 
+            />}
         </div>
     )
 }

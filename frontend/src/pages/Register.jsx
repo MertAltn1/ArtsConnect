@@ -1,10 +1,10 @@
-import '../App.css'
+import '/src/App.css'
 import { useState } from 'react'
 import { Link } from 'react-router'
-import logo from '../assets/logo.png'
+import logo from '/src/assets/logo.png'
 import { useNavigate } from 'react-router'
-import { apiFetch } from '../api'
-import AlertMessage from '../components/AlertMessage'
+import { apiFetch } from '/src/api'
+import AlertMessage from '/src/components/AlertMessage'
 
 const Register = () => {
     const [username, setUsername] = useState("");

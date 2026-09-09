@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Routes,Route, Navigate } from 'react-router'
-import './App.css'
-import { apiFetch } from './api'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Main from './pages/Main'
-import Navbar from './components/Navbar'
+import '/src/App.css'
+import { apiFetch } from '/src/api'
+import Login from '/src/pages/Login'
+import Register from '/src/pages/Register'
+import Main from '/src/pages/Main'
 
 function App() {
-  const [count, setCount] = useState(0)
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(null);
 

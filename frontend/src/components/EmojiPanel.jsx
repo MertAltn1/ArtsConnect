@@ -6,7 +6,6 @@ const EmojiPanel =({ onEmojiSelect }) =>{
             {emojis.map((emoji)=>(
                 <button
                     key={emoji}
-                    className="emoji"
                     onClick={() => onEmojiSelect(emoji)}
                 >
                     {emoji}

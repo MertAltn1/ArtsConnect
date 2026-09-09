@@ -1,7 +1,7 @@
-import Navbar from '../components/Navbar'
-import ChatPanel from '../components/ChatPanel'
+import Navbar from '/src/components/Navbar'
+import ChatPanel from '/src/components/ChatPanel'
 import { useEffect, useState } from 'react'
-import { apiFetch } from '../api'
+import { apiFetch } from '/src/api'
 
 const Main = ( {setToken,user} ) => {
     const [chats, setChats] = useState([]);

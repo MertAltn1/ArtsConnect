@@ -1,33 +1,41 @@
-import '../App.css'
-import ChatSettings from './ChatSettings'
-import ChatWallpaper from './ChatWallpaper'
-import UserProfile from './UserProfile'
-import EmojiPanel from './EmojiPanel'
-import logo from '../assets/logo.png'
+import '/src/App.css'
+import ChatSettings from '/src/components/ChatSettings'
+import ChatWallpaper from '/src/components/ChatWallpaper'
+import UserProfile from '/src/components/UserProfile'
+import EmojiPanel from '/src/components/EmojiPanel'
+import TopicList from '/src/components/TopicList'
+import logo from '/src/assets/logo.png'
+import useDebounce from '/src/hooks/useDebounce'
 import { useEffect, useState } from 'react'
-import { apiFetch, WS_URL } from '../api'
-import { MoreVert, Search, AttachFile, InsertEmoticon, Send, HorizontalRule } from '@mui/icons-material';
+import { apiFetch, API_URL, WS_URL } from '/src/api'
+import { MoreVert, Search, AttachFile, InsertEmoticon, Send } from '@mui/icons-material';
 
 const ChatPanel = ( {selected, user, deleteChat} ) => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [showSettings, setShowSettings] = useState(false)
-    const [wallpaper, setWallpaper] = useState("#F2F6FA")
+    const [wallpaper, setWallpaper] = useState(localStorage.getItem("wallpaper") || "#F2F6FA")
     const [showWallpaper, setShowWallpaper] = useState(false)
     const [showProfile, setShowProfile] = useState(false)
     const [showEmoji, setShowEmoji] = useState(false)
     const [socket, setSocket] = useState(null)
+    const [selectedTopic, setSelectedTopic] = useState("")   /* "" = Genel */
+    const [search, setSearch] = useState("")
+    const [showSearch, setShowSearch] = useState(false)
+
+    const searchText = useDebounce(search, 300)  /* her harfte listeyi cizmesin */
+
+    const messageTopics = messages.map((m) => m.topic)
+
+    /* "" hep dursun, yeni yazilan konu da mesaji yokken gorunsun */
+    const topics = [...new Set(["", selectedTopic, ...messageTopics])]
 
     function sendMessage() {
         if(!newMessage.trim()) return; /* empty mesaj */
 
-        socket.send(JSON.stringify({ content: newMessage }))
+        socket.send(JSON.stringify({ content: newMessage, topic: selectedTopic }))
 
         setNewMessage("")   /* ekrana basmayi websocket yapiyor */
-    }
-
-    function addEmoji(emoji) {
-        setNewMessage(newMessage + emoji);
     }
 
     useEffect(()=>{
@@ -41,6 +49,7 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
         }
 
         getMessages()
+        setSelectedTopic("")   /* sohbet degisince Genel'e don */
     }, [selected])
 
     useEffect(()=>{
@@ -51,7 +60,7 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
 
         ws.onmessage = (x) => {
             const message = JSON.parse(x.data)
-            setMessages((eski) => [...eski, message])  /* eski liste React'ten gelsin */
+            setMessages((old) => [...old, message])  /* eski liste React'ten gelsin */
         }
 
         setSocket(ws)
@@ -75,7 +84,7 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
                     {selected.user.profile_photo ? (
                         <img
                             className="chatPhoto"
-                            src={`http://127.0.0.1:8000${selected.user.profile_photo}`}
+                            src={`${API_URL}${selected.user.profile_photo}`}
                             alt={selected.user.username}
                         />
                     ) : (
@@ -85,7 +94,17 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
                 </div>
                     
                 <div className="chatHeaderRight">
-                    <button className='iconButton'><Search /></button>
+                    {showSearch && (
+                        <input
+                            className='searchMessage'
+                            placeholder='Search in chat'
+                            value={search}
+                            onChange={(x) => setSearch(x.target.value)}
+                        />
+                    )}
+                    <button className='iconButton' onClick={()=>setShowSearch(!showSearch)}>
+                        <Search />
+                    </button>
                     <div className='posFix'>
                         <button className='iconButton' 
                             onClick={()=>setShowSettings(!showSettings)}><MoreVert/>
@@ -102,6 +121,12 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
                 </div>
             </div>
 
+            <TopicList
+                topics={topics}
+                selectedTopic={selectedTopic}
+                setSelectedTopic={setSelectedTopic}
+            />
+
             {showProfile && (
                 <UserProfile userId={selected.user.id} setShowProfile={setShowProfile} />
             )}
@@ -111,7 +136,11 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
             )}
 
             <div className="messageList" style={{ background: wallpaper}}>
-                {messages.map((message) => (
+                {messages
+                .filter((m) => m.topic === selectedTopic)
+                .filter((m) => m.content.toLowerCase().includes(searchText.toLowerCase()))
+                .reverse()   /* kutu ters oldugu icin liste de ters basiliyor */
+                .map((message) => (
                     <div
                         className={message.sender === user?.username ? "messageMine" : "messageOther"}
                         key={message.id}

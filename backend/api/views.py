@@ -6,7 +6,12 @@ from rest_framework.views import APIView
 
 from .forms import LoginForm, ProfilPhoto, RegistrationForm
 from .models import Chat, Message
-from .serializers import ChatSerializer, MeSerializer, MessageSerializer, UserSerializer
+from .serializers import (
+    ChatSerializer,
+    MeSerializer,
+    MessageSerializer,
+    UserSerializer,
+)
 
 
 class RegisterView(APIView):
@@ -28,7 +33,9 @@ class RegisterView(APIView):
 
             token, _ = Token.objects.get_or_create(user=user)
 
-            return Response({"message": "Registration successful.", "token": token.key})
+            return Response(
+                {"message": "Registration successful.", "token": token.key}
+            )
 
         return Response({"errors": form.errors}, status=400)
 
@@ -43,10 +50,14 @@ class LoginView(APIView):
             return Response({"errors": form.errors}, status=400)
 
         data = form.cleaned_data
-        user = authenticate(username=data["username"], password=data["password"])
+        user = authenticate(
+            username=data["username"], password=data["password"]
+        )
 
         if user is None:
-            return Response({"error": "Invalid username or password."}, status=400)
+            return Response(
+                {"error": "Invalid username or password."}, status=400
+            )
 
         token, _ = Token.objects.get_or_create(user=user)
 
@@ -88,9 +99,15 @@ class ChatListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        chats = Chat.objects.filter(users=request.user)
+        chats = (
+            Chat.objects.filter(users=request.user)
+            .exclude(deleted_by=request.user)
+            .order_by("-id")  # yeni sohbet uste
+        )
 
-        serializer = ChatSerializer(chats, many=True, context={"request": request})
+        serializer = ChatSerializer(
+            chats, many=True, context={"request": request}
+        )
 
         data = []
 
@@ -115,7 +132,11 @@ class ChatListView(APIView):
             return Response({"error": "User not found."}, status=404)
 
         # kullanıcı sohbetleri ikiside
-        chat = Chat.objects.filter(users=request.user).filter(users=other_user).first()
+        chat = (
+            Chat.objects.filter(users=request.user)
+            .filter(users=other_user)
+            .first()
+        )
 
         if chat is None:
             chat = Chat.objects.create()
@@ -137,19 +158,8 @@ class MessageListView(APIView):
 
         messages = Message.objects.filter(chat=chat).order_by("created_at")
 
-        serializer = MessageSerializer(messages, many=True)  # queryset ondan many
-
-        return Response(serializer.data)
-
-    def post(self, request, chat_id):
-        chat = Chat.objects.filter(id=chat_id, users=request.user).first()
-        if chat is None:
-            return Response({"error": "Chat not found."}, status=404)
-
-        serializer = MessageSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=400)
-        serializer.save(chat=chat, sender=request.user)
+        # queryset ondan many
+        serializer = MessageSerializer(messages, many=True)
 
         return Response(serializer.data)
 
@@ -159,7 +169,7 @@ class MessageListView(APIView):
         if chat is None:
             return Response({"error": "Chat not found."}, status=404)
 
-        chat.delete()  # mesajlar da gider, cascade
+        chat.deleted_by.add(request.user)  # sadece benden silinsin
 
         return Response({"message": "Chat deleted."})
 
@@ -182,7 +192,8 @@ class SearchUserView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        username = request.query_params.get("username", "")  # search/?username=mert
+        # search/?username=mert
+        username = request.query_params.get("username", "")
 
         User = get_user_model()
 
@@ -190,7 +201,8 @@ class SearchUserView(APIView):
             username__icontains=username  # icontains==contain
         ).exclude(id=request.user.id)
 
-        users = users[:50]  # simdilik 50 kisi yeter, hepsini cekince yavasliyor
+        # simdilik 50 kisi yeter, hepsini cekince yavasliyor
+        users = users[:50]
 
         serializer = UserSerializer(users, many=True)
 

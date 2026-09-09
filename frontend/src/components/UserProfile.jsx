@@ -1,7 +1,7 @@
-import '../App.css'
+import '/src/App.css'
 import { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
-import { apiFetch } from '../api'
+import { apiFetch, API_URL } from '/src/api'
 
 const UserProfile = ({ userId, setShowProfile }) => {
     const [person, setPerson] = useState(null);
@@ -32,9 +32,9 @@ const UserProfile = ({ userId, setShowProfile }) => {
                 </div>
                 <div className='profileTop'>
                     {person?.profile_photo ? (
-                        <img className="profilPhoto" src={`http://127.0.0.1:8000${person.profile_photo}`} alt={person.username} />
+                        <img className={person.online ? "profilePhoto onlineRing" : "profilePhoto offlineRing"} src={`${API_URL}${person.profile_photo}`} alt={person.username} />
                     ) : (
-                        <div className="profilPhoto"></div>
+                        <div className={person?.online ? "profilePhoto onlineRing" : "profilePhoto offlineRing"}></div>
                     )}
 
                     <div className='profileTopText'>
@@ -48,6 +48,7 @@ const UserProfile = ({ userId, setShowProfile }) => {
                     <p><span className='profileLabel'>Role:</span> {person?.role}</p>
                     <p><span className='profileLabel'>Department:</span> {person?.department}</p>
                     <p><span className='profileLabel'>Contact:</span> {person?.email}</p>
+                    <p><span className='profileLabel'>Messages:</span> {person?.message_count}</p>
 
                     <p><span className='profileLabel'>Team:</span></p>
 
@@ -55,7 +56,7 @@ const UserProfile = ({ userId, setShowProfile }) => {
                         {person?.team?.map((member) => (
                             <div className='teamItem' key={member.id}>
                                 {member.profile_photo ? (
-                                    <img className="teamPhoto" src={`http://127.0.0.1:8000${member.profile_photo}`} alt={member.username} />
+                                    <img className="teamPhoto" src={`${API_URL}${member.profile_photo}`} alt={member.username} />
                                 ) : (
                                     <div className="teamPhoto"></div>
                                 )}

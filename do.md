@@ -29,7 +29,7 @@ Serializer mesaj objesini jsona çeviriyor
 
 senderı response üretirken kullan ama frontend’den gelen input içinde bunu bekleme ve bunun üzerinden veri kaydetmeye çalışma.
 
-Chat satırı iki kullanıcının ortak kaydı, o yüzden silince iki taraftan da gidiyor. Tek taraflı silme için modele 'kim sildi' alanı eklemek gerekirdi — kullanıcıyı M2M'den çıkarmak işe yaramıyor çünkü serializer karşı tarafı bulamayınca sohbet iki taraftan da kayboluyor.
+Chat satırı iki kullanıcının ortak kaydı, o yüzden silince iki taraftan da gidiyor. Tek taraflı silme için modele 'kim sildi' alanı eklemek gerekli
 
 Redis?
 

@@ -6,7 +6,7 @@ import EmojiPanel from '/src/components/EmojiPanel'
 import TopicList from '/src/components/TopicList'
 import logo from '/src/assets/logo.png'
 import useDebounce from '/src/hooks/useDebounce'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { apiFetch, API_URL, WS_URL } from '/src/api'
 import { MoreVert, Search, AttachFile, InsertEmoticon, Send } from '@mui/icons-material';
 
@@ -22,6 +22,13 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
     const [selectedTopic, setSelectedTopic] = useState("")   /* "" = Genel */
     const [search, setSearch] = useState("")
     const [showSearch, setShowSearch] = useState(false)
+    const [unread, setUnread] = useState([])   /* okunmamis mesaji olan konular */
+
+    const topicRef = useRef(selectedTopic)
+
+    useEffect(() => {
+        topicRef.current = selectedTopic   /* onmessage guncel konuyu buradan okusun */
+    }, [selectedTopic])
 
     const searchText = useDebounce(search, 300)  /* her harfte listeyi cizmesin */
 
@@ -50,6 +57,7 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
 
         getMessages()
         setSelectedTopic("")   /* sohbet degisince Genel'e don */
+        setUnread([])          /* isaretler yeni sohbete tasinmasin */
     }, [selected])
 
     useEffect(()=>{
@@ -61,6 +69,10 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
         ws.onmessage = (x) => {
             const message = JSON.parse(x.data)
             setMessages((old) => [...old, message])  /* eski liste React'ten gelsin */
+
+            if(message.topic !== topicRef.current){  /* bakmadigim konuya geldi */
+                setUnread((old) => [...old, message.topic])
+            }
         }
 
         setSocket(ws)
@@ -125,6 +137,8 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
                 topics={topics}
                 selectedTopic={selectedTopic}
                 setSelectedTopic={setSelectedTopic}
+                unread={unread}
+                setUnread={setUnread}
             />
 
             {showProfile && (

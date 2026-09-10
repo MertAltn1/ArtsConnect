@@ -1,7 +1,7 @@
 import '/src/App.css'
 import { useState } from 'react'
 
-const TopicList = ({ topics, selectedTopic, setSelectedTopic }) => {
+const TopicList = ({ topics, selectedTopic, setSelectedTopic, unread, setUnread }) => {
     const [newTopic, setNewTopic] = useState("")
 
     return (
@@ -10,9 +10,13 @@ const TopicList = ({ topics, selectedTopic, setSelectedTopic }) => {
                 <button
                     className={topic === selectedTopic ? "topicItem topicActive" : "topicItem"}
                     key={topic}
-                    onClick={() => setSelectedTopic(topic)}
+                    onClick={() => {
+                        setSelectedTopic(topic)
+                        setUnread(unread.filter((t) => t !== topic))  /* okundu */
+                    }}
                 >
                     {topic === "" ? "Genel" : topic}
+                    {unread.includes(topic) && <span className="unreadDot"></span>}
                 </button>
             ))}
 

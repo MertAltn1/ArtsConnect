@@ -273,6 +273,14 @@
   cursor: pointer;
   white-space: nowrap;   /* konu adi alta kaymasin */
 }
+.unreadDot{
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background-color: #f37123;
+}
 .topicActive{
   background-color: #f37123;
   color: white;

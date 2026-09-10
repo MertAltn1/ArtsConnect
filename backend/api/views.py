@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .forms import LoginForm, ProfilPhoto, RegistrationForm
+from .forms import LoginForm, ProfilePhotoForm, RegistrationForm
 from .models import Chat, Message
 from .serializers import (
     ChatSerializer,
@@ -177,7 +177,7 @@ class ProfilePhotoView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        form = ProfilPhoto(request.data, request.FILES)
+        form = ProfilePhotoForm(request.data, request.FILES)
         if not form.is_valid():
             return Response({"errors": form.errors}, status=400)
         photo = form.cleaned_data["profile_photo"]

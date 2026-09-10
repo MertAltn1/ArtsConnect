@@ -35,5 +35,5 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
-class ProfilPhoto(forms.Form):
+class ProfilePhotoForm(forms.Form):
     profile_photo = forms.ImageField()

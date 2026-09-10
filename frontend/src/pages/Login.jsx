@@ -12,7 +12,7 @@ const Login = ({ setToken }) => {
     const navigate = useNavigate();
     const [message, setMessage] = useState("")
 
-    async function sentPOST(){
+    async function login(){
         const data = {
             username,
             password
@@ -64,7 +64,7 @@ const Login = ({ setToken }) => {
                 </div>                               
 
                 <div className='authItem' >
-                    <button className='authButton' onClick={sentPOST}>LOGIN</button>
+                    <button className='authButton' onClick={login}>LOGIN</button>
                 </div>
 
                 <div className='authItem authText'>

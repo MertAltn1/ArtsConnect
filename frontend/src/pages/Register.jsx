@@ -15,7 +15,7 @@ const Register = () => {
     const [role, setRole] = useState("");
     const navigate = useNavigate();
 
-    async function sentPOST(){
+    async function register(){
         const data = {
             username,
             email,
@@ -102,7 +102,7 @@ const Register = () => {
                 </div>
 
                 <div className='authItem'>
-                    <button className='authButton' onClick={sentPOST}>SIGN UP</button>
+                    <button className='authButton' onClick={register}>SIGN UP</button>
                 </div>
 
                 <div className='authItem authText'>

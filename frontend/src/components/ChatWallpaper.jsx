@@ -1,12 +1,13 @@
 import '/src/App.css'
 import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
 
-const ChatWallpaper = ({ setWallpaper, setShowWallpaper }) => {
+const ChatWallpaper = ({ wallpaper, setWallpaper, setShowWallpaper }) => {
     const colors = ["#F2F6FA", "#080808", "#e8f4ec", "#fde8e8", "#233D54"]  /* ilki varsayilan */
 
     return (
         <div className='profileOverlay'>
-            <div className='profileBox'>
+            <div className='profileBox wallpaperBox'>
                 <div className='profileHeader'>
                     <h2>Wallpaper</h2>
                     <button
@@ -17,10 +18,12 @@ const ChatWallpaper = ({ setWallpaper, setShowWallpaper }) => {
                     </button>
                 </div>
 
+                <p className='wallpaperHint'>Choose a background for this chat</p>
+
                 <div className='colorList'>
                     {colors.map((color) => (
                         <div
-                            className='colorItem'
+                            className={color === wallpaper ? "colorItem colorActive" : "colorItem"}
                             key={color}
                             style={{ background: color }}
                             onClick={() => {
@@ -28,7 +31,13 @@ const ChatWallpaper = ({ setWallpaper, setShowWallpaper }) => {
                                 setWallpaper(color)
                                 setShowWallpaper(false)
                             }}
-                        ></div>
+                        >
+                            {color === wallpaper && (
+                                <span className="colorCheckBadge">
+                                    <CheckIcon className="colorCheck" />
+                                </span>
+                            )}
+                        </div>
                     ))}
                 </div>
             </div>

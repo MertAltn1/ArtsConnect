@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import '/src/App.css'
 import useDebounce from '/src/hooks/useDebounce'
-import { apiFetch, API_URL } from '/src/api'
+import { apiFetch, mediaUrl } from '/src/api'
 
 const AddUser = ({ setShowAddUser, chats, setChats }) => {
     const [username, setUsername] = useState("");
@@ -69,7 +69,7 @@ const AddUser = ({ setShowAddUser, chats, setChats }) => {
                             {found.profile_photo ? (
                                 <img
                                     className="chatPhoto"
-                                    src={`${API_URL}${found.profile_photo}`}
+                                    src={mediaUrl(found.profile_photo)}
                                     alt={found.username}
                                 />
                             ) : (

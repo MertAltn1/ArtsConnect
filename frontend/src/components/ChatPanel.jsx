@@ -7,7 +7,7 @@ import TopicList from '/src/components/TopicList'
 import logo from '/src/assets/logo.png'
 import useDebounce from '/src/hooks/useDebounce'
 import { useEffect, useRef, useState } from 'react'
-import { apiFetch, API_URL, WS_URL } from '/src/api'
+import { apiFetch, createChatSocket, mediaUrl } from '/src/api'
 import { MoreVert, Search, AttachFile, InsertEmoticon, Send } from '@mui/icons-material';
 
 const ChatPanel = ( {selected, user, deleteChat} ) => {
@@ -62,8 +62,7 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
     useEffect(()=>{
         if(!selected) return
 
-        const token = localStorage.getItem("token")
-        const ws = new WebSocket(`${WS_URL}/ws/chat/${selected.id}/${token}/`)
+        const ws = createChatSocket(selected.id)
 
         ws.onmessage = (x) => {
             const message = JSON.parse(x.data) /*json js */
@@ -84,6 +83,7 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
             <div className="chatArea chatEmpty">
                 <img className="chatEmptyLogo" src={logo} alt="ArtsConnect" />
                 <span className="chatEmptyName">ArtsConnect</span>
+                <small className="chatEmptyCredit">Created by Mert A.</small>
             </div>
         )
     }
@@ -95,13 +95,13 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
                     {selected.user.profile_photo ? (
                         <img
                             className="chatPhoto"
-                            src={`${API_URL}${selected.user.profile_photo}`}
+                            src={mediaUrl(selected.user.profile_photo)}
                             alt={selected.user.username}
                         />
                     ) : (
                         <div className="chatPhoto"></div>
                     )}
-                    <span>{selected.user.username}</span>
+                    <span>{selected.user.full_name}</span>
                 </div>
                     
                 <div className="chatHeaderRight">
@@ -145,7 +145,7 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
             )}
 
             {showWallpaper && (
-                <ChatWallpaper setWallpaper={setWallpaper} setShowWallpaper={setShowWallpaper} />
+                <ChatWallpaper wallpaper={wallpaper} setWallpaper={setWallpaper} setShowWallpaper={setShowWallpaper} />
             )}
 
             <div className="messageList" style={{ background: wallpaper}}>
@@ -158,7 +158,10 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
                         className={message.sender === user?.username ? "messageMine" : "messageOther"}
                         key={message.id}
                     >
-                        <div>{message.content}</div>
+                        {message.image && (
+                            <img className="messageImage" src={mediaUrl(message.image)} alt="attachment" />
+                        )}
+                        {message.content && <div>{message.content}</div>}
                         <small>{new Date(message.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</small>
                     </div>
                 ))}

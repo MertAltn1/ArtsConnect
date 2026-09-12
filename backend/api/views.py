@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, get_user_model
+from django.db.models import F, Max
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -102,7 +103,8 @@ class ChatListView(APIView):
         chats = (
             Chat.objects.filter(users=request.user)
             .exclude(deleted_by=request.user)
-            .order_by("-id")  # yeni sohbet uste
+            .annotate(last_activity=Max("messages__created_at"))
+            .order_by(F("last_activity").desc(nulls_last=True))
         )
 
         serializer = ChatSerializer(

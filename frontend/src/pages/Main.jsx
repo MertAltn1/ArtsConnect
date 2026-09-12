@@ -11,7 +11,7 @@ const Main = ( {setToken,user} ) => {
         async function getChats() {
             const response = await apiFetch("/api/chats/");
             const data = await response.json()
-            setChats(data) 
+            setChats(data)
         }
 
         getChats()
@@ -28,11 +28,12 @@ const Main = ( {setToken,user} ) => {
 
     return (
         <div className='mainPage'>
-            <Navbar 
-                setToken={setToken} 
+            <Navbar
+                setToken={setToken}
                 user={user}
                 chats={chats}
                 setChats={setChats}
+                selected={selected}
                 setSelected={setSelected}
             />
             <ChatPanel selected={selected} user={user} deleteChat={deleteChat}/>

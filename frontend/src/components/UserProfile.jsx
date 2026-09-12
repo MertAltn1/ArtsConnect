@@ -1,7 +1,7 @@
 import '/src/App.css'
 import { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
-import { apiFetch, API_URL } from '/src/api'
+import { apiFetch, mediaUrl } from '/src/api'
 
 const UserProfile = ({ userId, setShowProfile }) => {
     const [person, setPerson] = useState(null);
@@ -32,13 +32,13 @@ const UserProfile = ({ userId, setShowProfile }) => {
                 </div>
                 <div className='profileTop'>
                     {person?.profile_photo ? (
-                        <img className={person.online ? "profilePhoto onlineRing" : "profilePhoto offlineRing"} src={`${API_URL}${person.profile_photo}`} alt={person.username} />
+                        <img className={person.online ? "profilePhoto onlineRing" : "profilePhoto offlineRing"} src={mediaUrl(person.profile_photo)} alt={person.username} />
                     ) : (
                         <div className={person?.online ? "profilePhoto onlineRing" : "profilePhoto offlineRing"}></div>
                     )}
 
                     <div className='profileTopText'>
-                        <span className='profileName'>{person?.username}</span>
+                        <span className='profileName'>{person?.full_name}</span>
                         <p className='roleText'>{person?.role}</p>
                         <small>{person?.department}</small>
                     </div>
@@ -56,12 +56,12 @@ const UserProfile = ({ userId, setShowProfile }) => {
                         {person?.team?.map((member) => (
                             <div className='teamItem' key={member.id}>
                                 {member.profile_photo ? (
-                                    <img className="teamPhoto" src={`${API_URL}${member.profile_photo}`} alt={member.username} />
+                                    <img className="teamPhoto" src={mediaUrl(member.profile_photo)} alt={member.username} />
                                 ) : (
                                     <div className="teamPhoto"></div>
                                 )}
 
-                                <span>{member.username}</span>
+                                <span>{member.full_name}</span>
                                 <small>{member.role}</small>
                             </div>
                         ))}

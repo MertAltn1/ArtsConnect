@@ -13,7 +13,7 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.chat_id = self.scope["url_route"]["kwargs"]["chat_id"]
         self.group_name = f"chat_{self.chat_id}"  # odanin adi
-        self.user = None  
+        self.user = None
 
         key = self.scope["url_route"]["kwargs"]["token"]
         token = Token.objects.filter(key=key).first()
@@ -46,7 +46,7 @@ class ChatConsumer(WebsocketConsumer):
             self.group_name, self.channel_name
         )
 
-        if self.user is None: 
+        if self.user is None:
             return
 
         self.user.online = False

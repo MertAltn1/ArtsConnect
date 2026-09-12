@@ -21,10 +21,12 @@
   padding: 35px 40px;
   width: 100%;
   max-width: 450px;
-  border: 1px solid grey;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(35, 61, 84, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 20px;      
+  gap: 20px;
 }
 .authLogo{
   width: 70px;
@@ -33,10 +35,14 @@
   width: 80%;
   padding: 15px;
   background: white;
-  border: 1px solid grey;
+  border: 1px solid #d5dbe0;
   border-radius: 8px;
   outline: none;
   cursor: pointer;
+  transition: border-color 0.15s;
+}
+.authBox input:focus{
+  border-color: #f37123;
 }
 .authItem{
   display: flex;
@@ -49,24 +55,29 @@
   color: #555;
 }
 .authLink{
-  color: #164BA1;
+  color: #f37123;
   font-weight: bold;
   margin-left: 4px;
 }
 .authTitle {
   font-size: 28px;
-  color: #333;
+  color: #233D54;
   font-weight: bold;
   text-align: center;
 }
 .authButton{
   width: 80%;
   padding: 15px;
-  border: 1px solid grey;
-  background: #164BA1;
+  border: none;
+  background: #f37123;
   border-radius: 8px;
   color: white;
+  font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.15s;
+}
+.authButton:hover{
+  background-color: #d9601c;
 }
 .navBar{
   display: flex;
@@ -156,6 +167,32 @@
   border-radius: 8px;
   cursor: pointer;
   color: white;
+  border-bottom: 1px solid rgba(255,255,255,0.06);   /* liste ayrimi */
+}
+.chatItemActive{
+  background-color: #2E4A63;   /* hover'la ayni renk, secili kalici gorunsun */
+}
+.chatItemMeta{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;   /* isim uzun olsa da sikismasin */
+}
+.chatItemMeta small{
+  color: #9BB0C4;
+  font-size: 11px;
+}
+.chatItemText{
+  flex: 1;
+  min-width: 0;   /* ellipsis'in calismasi icin sart */
+}
+.lastMessage{
+  color: #9BB0C4;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;   /* uzun mesaj ... ile kesilsin */
 }
 .chatItem:hover{
   background-color: #2E4A63;
@@ -256,8 +293,8 @@
 .topicList{
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 20px;
+  gap: 10px;
+  padding: 10px 20px;
   flex-shrink: 0;        /* mesajlar artinca ezilmesin */
   background-color: white;
   border-bottom: 1px solid #e5e5e5;
@@ -266,12 +303,18 @@
 }
 .topicItem{
   border: none;
-  padding: 6px 14px;
-  border-radius: 12px;
+  padding: 7px 16px;
+  border-radius: 14px;
   background-color: #f2f2f2;
   color: #233D54;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
   white-space: nowrap;   /* konu adi alta kaymasin */
+  transition: background-color 0.15s;
+}
+.topicItem:hover{
+  background-color: #e5e5e5;
 }
 .unreadDot{
   display: inline-block;
@@ -281,15 +324,20 @@
   border-radius: 50%;
   background-color: #f37123;
 }
-.topicActive{
+.topicActive, .topicActive:hover{
   background-color: #f37123;
   color: white;
 }
 .topicInput{
-  border: none;
+  border: 1px dashed #d5dbe0;
   outline: none;
+  border-radius: 14px;
+  padding: 6px 14px;
   width: 80px;
   font-size: 13px;
+}
+.topicInput:focus{
+  border-color: #f37123;
 }
 .messageList{
   flex: 1;
@@ -305,6 +353,11 @@
   max-width: 60%;
   padding: 10px 14px;
   border-radius: 12px;
+}
+.messageImage{
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 6px;
 }
 .messageMine{
   align-self: flex-end;   
@@ -323,9 +376,9 @@
   opacity: 0.7;
 }
 .chatEmpty{
-  align-items: center;    
+  align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 20px;
 }
 .chatEmptyLogo{
   width: 90px;
@@ -336,6 +389,11 @@
   font-weight: bold;
   color: #233D54;
   opacity: 0.5;
+}
+.chatEmptyCredit{
+  font-size: 13px;
+  color: #9BB0C4;
+  letter-spacing: 0.5px;
 }
 
 .alertMessage {
@@ -588,16 +646,51 @@
 .profileBox p{
   margin: 0;
 }
+.wallpaperBox{
+  max-width: 560px;   /* 5 renk tek satirda yan yana sigsin */
+}
+.wallpaperHint{
+  width: 100%;
+  font-size: 13px;
+  color: #9BB0C4;
+  margin: -6px 0 4px;
+}
 .colorList{
   width: 100%;
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 .colorItem{
-  width: 60px;
-  height: 60px;
+  width: 88px;
+  height: 88px;
+  border-radius: 12px;
   border: 1px solid #e5e5e5;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s, border-color 0.1s;
+}
+.colorItem:hover{
+  transform: scale(1.05);
+  border-color: #f37123;
+}
+.colorActive{
+  border: 2px solid #f37123;
+}
+.colorCheckBadge{
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,0.55);   /* her renkte kontrast garanti */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.colorCheck{
+  color: white;
+  font-size: 18px;
 }
 .emojiPanel{
   background-color: white;

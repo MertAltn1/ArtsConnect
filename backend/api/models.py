@@ -46,7 +46,10 @@ class Message(models.Model):
         User, on_delete=models.CASCADE, related_name="sent_messages"
     )
     topic = models.CharField(max_length=50, blank=True)  # bos ise Genel
-    content = models.TextField()
+    content = models.TextField(blank=True)
+    image = models.ImageField(
+        upload_to="message_images/", null=True, blank=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
 

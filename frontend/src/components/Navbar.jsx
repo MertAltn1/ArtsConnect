@@ -3,12 +3,12 @@ import AddUser from '/src/components/AddUser'
 import UserProfile from '/src/components/UserProfile'
 import logo from '/src/assets/logo.png'
 import { useNavigate } from 'react-router'
-import { useState } from 'react'
-import { apiFetch, API_URL } from '/src/api'
+import { useEffect, useState } from 'react'
+import { apiFetch, API_URL, DEMO_MODE, mediaUrl } from '/src/api'
 import useDebounce from '/src/hooks/useDebounce'
 import { PhotoCameraOutlined, PersonAddAlt1, PersonOutlined, LogoutOutlined } from '@mui/icons-material';
 
-const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
+const Navbar = ( {setToken, user, chats, setChats, selected, setSelected } ) => {
     const navigate = useNavigate();
     const [photo, setPhoto] = useState(null)
     const [search, setSearch] = useState("");
@@ -18,9 +18,33 @@ const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
 
     const shownPhoto = photo || user?.profile_photo /*yeni foto var mı */
 
+    /* acilan sohbeti "okundu" olarak isaretle */
+    useEffect(() => {
+        if(!selected) return
+
+        const lastRead = JSON.parse(localStorage.getItem("lastRead") || "{}")
+        lastRead[selected.id] = new Date().toISOString()
+        localStorage.setItem("lastRead", JSON.stringify(lastRead))
+    }, [selected])
+
+    function isUnread(chat){
+        if(chat.id === selected?.id) return false   /* acik olan zaten okunuyor */
+        if(!chat.last_message_at) return false       /* hic mesaj yoksa okunmamis sayilmaz */
+
+        const lastRead = JSON.parse(localStorage.getItem("lastRead") || "{}")
+        const readAt = lastRead[chat.id]
+
+        return !readAt || new Date(chat.last_message_at) > new Date(readAt)
+    }
+
     async function uploadPhoto(x){
         const file = x.target.files[0]
         if(!file) return
+
+        if(DEMO_MODE){
+            setPhoto(URL.createObjectURL(file))   /* backend yok, sadece tarayicida goster */
+            return
+        }
 
         const token = localStorage.getItem("token")
 
@@ -61,7 +85,7 @@ const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
                         {shownPhoto ? (
                             <img
                                 className="profilePhoto"
-                                src={`${API_URL}${shownPhoto}`}
+                                src={mediaUrl(shownPhoto)}
                                 alt="Profile"
                             />
                             ) : (
@@ -78,7 +102,7 @@ const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
                             hidden
                         />
                     </div>
-                    <span>{user?.username}</span>
+                    <span>{user?.full_name}</span>
                     <p className='roleText'>{user?.role}</p>
                 </div>
 
@@ -105,26 +129,35 @@ const Navbar = ( {setToken, user, chats, setChats, setSelected } ) => {
             <div className="chatList">
                 {chats
                 .filter((chat)=>
-                    chat.user.username.toLowerCase().includes(searchText.toLowerCase())
+                    chat.user.full_name.toLowerCase().includes(searchText.toLowerCase())
                 )
                 .map((chat) => (
                     <div
-                        className="chatItem"
+                        className={chat.id === selected?.id ? "chatItem chatItemActive" : "chatItem"}
                         key={chat.id}
                         onClick={()=>setSelected(chat)}
                     >
                         {chat.user.profile_photo ? (
                             <img
                                 className={chat.user.online ? "chatPhoto onlineRing" : "chatPhoto offlineRing"}
-                                src={`${API_URL}${chat.user.profile_photo}`}
+                                src={mediaUrl(chat.user.profile_photo)}
                                 alt={chat.user.username}
                             />
                         ) : (
                             <div className={chat.user.online ? "chatPhoto onlineRing" : "chatPhoto offlineRing"}></div>
                         )}
-                        <div>
-                            <div><p>{chat.user.username}</p></div>
-                            <p className='roleText'>{chat.user.role}</p>
+                        <div className='chatItemText'>
+                            <div><p>{chat.user.full_name}</p></div>
+                            <p className='lastMessage'>{chat.last_message}</p>
+                        </div>
+
+                        <div className='chatItemMeta'>
+                            <small>
+                                {chat.last_message_at &&
+                                    new Date(chat.last_message_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+                                }
+                            </small>
+                            {isUnread(chat) && <span className="unreadDot"></span>}
                         </div>
                     </div>
                 ))}

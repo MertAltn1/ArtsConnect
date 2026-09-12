@@ -14,9 +14,9 @@ from django.core.asgi import get_asgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "crud.settings")
 
-django_asgi_app = get_asgi_application()
+django_asgi_app = get_asgi_application() #endleri addledm
 
-import api.routing  # modeller yuklendikten sonra import edilmeli
+import api.routing  #routing.py importladım
 
 application = ProtocolTypeRouter(
     {

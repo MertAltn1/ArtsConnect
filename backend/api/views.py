@@ -122,25 +122,25 @@ class ChatListView(APIView):
     def post(self, request):
         User = get_user_model()
 
-        other_user = (
+        receiver = (
             User.objects.filter(id=request.data.get("user_id"))
             .exclude(id=request.user.id)
             .first()
         )
 
-        if other_user is None:
+        if receiver is None:
             return Response({"error": "User not found."}, status=404)
 
         # kullanıcı sohbetleri ikiside
         chat = (
             Chat.objects.filter(users=request.user)
-            .filter(users=other_user)
+            .filter(users=receiver)
             .first()
         )
 
         if chat is None:
             chat = Chat.objects.create()
-            chat.users.add(request.user, other_user)
+            chat.users.add(request.user, receiver)
 
         serializer = ChatSerializer(chat, context={"request": request})
 
@@ -158,7 +158,6 @@ class MessageListView(APIView):
 
         messages = Message.objects.filter(chat=chat).order_by("created_at")
 
-        # queryset ondan many
         serializer = MessageSerializer(messages, many=True)
 
         return Response(serializer.data)

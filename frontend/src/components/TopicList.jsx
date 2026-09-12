@@ -15,14 +15,14 @@ const TopicList = ({ topics, selectedTopic, setSelectedTopic, unreadTopics, setU
                         setUnreadTopics(unreadTopics.filter((t) => t !== topic))  /* okundu */
                     }}
                 >
-                    {topic === "" ? "Genel" : topic}
+                    {topic === "" ? "General" : topic}
                     {unreadTopics.includes(topic) && <span className="unreadDot"></span>}
                 </button>
             ))}
 
             <input
                 className="topicInput"
-                placeholder="+ konu"
+                placeholder="+ Topic"
                 value={newTopic}
                 onChange={(x) => setNewTopic(x.target.value)}
                 onKeyDown={(x) => {

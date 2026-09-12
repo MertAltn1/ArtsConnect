@@ -77,7 +77,7 @@ ASGI_APPLICATION = "crud.asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",  # tek sunucu, redis gerekmiyor
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # tek sunucu, ilerde redis?
     },
 }
 

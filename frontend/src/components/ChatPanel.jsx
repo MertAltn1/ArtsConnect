@@ -19,7 +19,7 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
     const [showProfile, setShowProfile] = useState(false)
     const [showEmoji, setShowEmoji] = useState(false)
     const [socket, setSocket] = useState(null)
-    const [selectedTopic, setSelectedTopic] = useState("")   /* "" = Genel */
+    const [selectedTopic, setSelectedTopic] = useState("")   /* "" = General */
     const [search, setSearch] = useState("")
     const [showSearch, setShowSearch] = useState(false)
     const [unreadTopics, setUnreadTopics] = useState([])   
@@ -30,11 +30,10 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
         topicRef.current = selectedTopic   /* onmessage guncel konuyu buradan okusun */
     }, [selectedTopic])
 
-    const searchText = useDebounce(search, 300)  /* her harfte listeyi cizmesin */
+    const searchText = useDebounce(search, 300) 
 
     const messageTopics = messages.map((m) => m.topic)
 
-    /* "" hep dursun, yeni yazilan konu da mesaji yokken gorunsun */
     const topics = [...new Set(["", selectedTopic, ...messageTopics])]
 
     function sendMessage() {
@@ -42,7 +41,7 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
 
         socket.send(JSON.stringify({ content: newMessage, topic: selectedTopic }))
 
-        setNewMessage("")   /* ekrana basmayi websocket yapiyor */
+        setNewMessage("")   
     }
 
     useEffect(()=>{
@@ -56,8 +55,8 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
         }
 
         getMessages()
-        setSelectedTopic("")   /* sohbet degisince Genel'e don */
-        setUnreadTopics([])          /* isaretler yeni sohbete tasinmasin */
+        setSelectedTopic("")   
+        setUnreadTopics([])          
     }, [selected])
 
     useEffect(()=>{
@@ -67,17 +66,17 @@ const ChatPanel = ( {selected, user, deleteChat} ) => {
         const ws = new WebSocket(`${WS_URL}/ws/chat/${selected.id}/${token}/`)
 
         ws.onmessage = (x) => {
-            const message = JSON.parse(x.data)
-            setMessages((old) => [...old, message])  /* eski liste React'ten gelsin */
+            const message = JSON.parse(x.data) /*json js */
+            setMessages((old) => [...old, message])  
 
-            if(message.topic !== topicRef.current){  /* bakmadigim konuya geldi */
+            if(message.topic !== topicRef.current){  
                 setUnreadTopics((old) => [...old, message.topic])
             }
         }
 
         setSocket(ws)
 
-        return () => ws.close()   /* sohbet degisince baglantiyi kapat */
+        return () => ws.close()  
     }, [selected])
 
     if(!selected){

@@ -24,7 +24,7 @@
   border: 1px solid grey;
   display: flex;
   flex-direction: column;
-  gap: 20px;      /* registerda 9 kutu var, 30px olunca tasiyordu */
+  gap: 20px;      
 }
 .authLogo{
   width: 70px;
@@ -165,11 +165,11 @@
   height: 44px;
   border-radius: 50%;
   background-color: #2E4A63;
-  object-fit: cover;  /* kare olmayan foto ezilmesin, kirpilsin */
-  flex-shrink: 0;     /* uzun isimde ezilmesin */
+  object-fit: cover;  
+  flex-shrink: 0;     
 }
 .onlineRing{
-  border: 3px solid #4CD964;   /* profilePhoto'daki halkanin ayni */
+  border: 3px solid #4CD964;   
 }
 .offlineRing{
   border: 3px solid #e5484d;
@@ -401,7 +401,7 @@
 }
 
 .profilePart span{
-  font-size: 20px;   /* sadece fotonun altindaki isim, navBar span degil */
+  font-size: 20px;   
 }
 .roleText{
   font-size: 13px;
@@ -556,12 +556,12 @@
   gap: 8px;
   border-top: 1px solid #e5e5e5;
   padding-top: 14px;
-  font-size: 12px;       /* Role Department Contact Team hepsi buradan */
+  font-size: 12px;       
   color: #f37123;
 }
 .profileLabel{
   font-weight: bold;
-  color: #233D54;        /* boyutu profileDetails'ten aliyor */
+  color: #233D54;        
 }
 .teamList{
   display: flex;
